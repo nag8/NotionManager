@@ -31,6 +31,18 @@ class NotionRecord {
 
   setPropertiesDate(name, startDate, endDate) {
 
+    const formatText = 'YYYY-MM-DD';
+
+    this.json.properties[name] = {
+      date: {
+        start: startDate.format(formatText),
+        end: (endDate !== undefined && endDate.isValid()) ? endDate.format(formatText) : null,
+      },
+    };
+  }
+
+  setPropertiesDatetime(name, startDate, endDate) {
+
     const formatText = 'YYYY-MM-DDTHH:mm:ss.000+09:00';
 
     this.json.properties[name] = {
