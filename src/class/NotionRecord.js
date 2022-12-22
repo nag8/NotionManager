@@ -87,6 +87,18 @@ class NotionRecord {
     });
   }
 
+  pushChildrenImage(url) {
+    this.json.children.push({
+      type: 'image',
+      image: {
+        type: 'external',
+        external: {
+          url: url,
+        },
+      },
+    });
+  }
+
   getJson() {
     return this.json;
   }
