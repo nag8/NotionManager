@@ -59,4 +59,27 @@ class NotionManager {
 
     return recordList;
   }
+
+  updateRecord(pageId, updateJson) {
+    
+    const options = {
+      method: 'patch',
+      headers: this.getHeaders(),
+      payload: JSON.stringify(updateJson),
+      muteHttpExceptions: true,
+    };
+    const res = UrlFetchApp.fetch(`https://api.notion.com/v1/pages/${pageId}`, options);
+    return JSON.parse(res.getContentText());
+  }
+
+  getNotionRecord(pageId){
+    const options = {
+      method: 'get',
+      headers: this.getHeaders(),
+    };
+    const res = UrlFetchApp.fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, options);
+    const record = new NotionRecord();
+    record.setChildren(JSON.parse(res.getContentText()).results);
+    return record;
+  }
 }
