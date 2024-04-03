@@ -102,6 +102,49 @@ class NotionRecord {
   getJson() {
     return this.json;
   }
+
+  
+  getContentSlackText(){
+    // https://developers.notion.com/reference/block
+    return this.json.children.reduce((text, row) => {
+
+      const getPlainText = row => {
+
+        switch(row.type){
+          case 'paragraph':
+            if(row.paragraph.rich_text[0]?.type === 'mention'){
+              return row.paragraph.rich_text[0]?.href;
+            }
+            return row.paragraph.rich_text[0]?.plain_text;
+  
+          case 'heading_1':
+            const heading_1 = row.heading_1.rich_text[0]?.plain_text;
+            return heading_1 ? `\n*${heading_1}*`: undefined;
+
+          case 'heading_2':
+            const heading_2 = row.heading_2.rich_text[0]?.plain_text;
+            return heading_2 ? `\n*${heading_2}*`: undefined;
+
+          case 'heading_3':
+            const heading_3 = row.heading_3.rich_text[0]?.plain_text;
+            return heading_3 ? `\n*${heading_3}*`: undefined;
+  
+          case 'bulleted_list_item':
+            const bulleted_list_item = row.bulleted_list_item.rich_text[0]?.plain_text;
+            return bulleted_list_item ? `- ${bulleted_list_item}`: undefined;
+
+          case 'bookmark':
+            return row.bookmark.url;
+  
+          default:
+            return;
+        }
+      };
+      const rowText = getPlainText(row);
+      
+      return text += `\n${rowText ? rowText: ''}`;
+    }, '');
+  }
 }
 
 
